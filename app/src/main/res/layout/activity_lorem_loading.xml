@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
+
+    <ProgressBar
+        android:id="@android:id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="?android:listPreferredItemPaddingStart"
+            android:paddingTop="16dp"
+            android:paddingEnd="?android:listPreferredItemPaddingEnd"
+            android:paddingBottom="16dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/lorem_ipsum_title"/>
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/lorem_ipsum_text"/>
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/lorem_ipsum_title"/>
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/lorem_ipsum_text"/>
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/lorem_ipsum_title"/>
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/lorem_ipsum_text"/>
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/lorem_ipsum_title"/>
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/lorem_ipsum_text"/>
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

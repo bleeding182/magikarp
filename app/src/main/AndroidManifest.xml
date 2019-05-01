@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.davidmedenjak.sample">
+
+    <application
+        android:name=".App"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="false"
+        android:theme="@style/AppTheme.Splash"
+        tools:ignore="GoogleAppIndexingWarning">
+
+        <activity
+            android:name="com.davidmedenjak.sample.DemoActivity"
+            android:label="@string/title_activity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.davidmedenjak.sample.SplashActivity"
+            android:label="@string/title_activity"
+            android:launchMode="singleInstance"/>
+
+        <activity
+            android:name="com.davidmedenjak.sample.NoSplashActivity"
+            android:label="@string/title_activity"
+            android:launchMode="singleInstance"
+            android:targetActivity=".SplashActivity"
+            android:theme="@style/AppTheme"/>
+
+    </application>
+
+</manifest>
