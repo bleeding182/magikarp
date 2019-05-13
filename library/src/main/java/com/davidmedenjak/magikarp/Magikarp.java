@@ -51,7 +51,7 @@ public final class Magikarp {
   public static void addSplashScreen(
       @NonNull Application application, @StyleRes int defaultAppTheme) {
     application.registerActivityLifecycleCallbacks(
-        new SplashScreenLifecycleCallbackImpl(application, defaultAppTheme));
+        new ThemeLifecycleCallback(application, defaultAppTheme));
   }
 
   /**
