@@ -1,33 +1,25 @@
 package com.davidmedenjak.magikarp;
 
 import android.animation.Animator;
-import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
+@MainThread
 public final class RevealCallback {
 
   private final SplashView view;
   private boolean revealed = false;
 
-  @Nullable private Animator splashAnimator;
-
-  RevealCallback(SplashView view) {
+  RevealCallback(@NonNull SplashView view) {
     this.view = view;
-  }
-
-  private void removeView() {
-    ViewGroup parent = (ViewGroup) view.getParent();
-    if (parent != null) {
-      parent.removeView(view);
-    }
   }
 
   /** Reveal the content animating away the splash screen overlay. */
@@ -35,36 +27,26 @@ public final class RevealCallback {
     if (revealed) {
       return;
     }
-    revealed = true;
 
     final Animator revealAnimator = createRevealAnimator();
 
     final int animTime = readDefaultAnimationTime();
     revealAnimator.setDuration(animTime);
 
-    revealAnimator.addListener(new RemoveViewListener());
-
-    final Animator animation;
-    if (splashAnimator != null) {
-      animation = new AnimatorSet();
-      ((AnimatorSet) animation).playSequentially(splashAnimator, revealAnimator);
-      animation.start();
-    } else {
-      animation = revealAnimator;
-    }
-
-    animation.start();
+    reveal(revealAnimator);
   }
 
   /**
-   * Add an animation that plays <i>before</i> the reveal animation happens.
-   *
-   * @param splashAnimator the animator to play
-   * @return this RevealCallback
+   * Reveal the content animating away the splash screen overlay using the {@code revealAnimation}.
    */
-  public RevealCallback withAnimator(Animator splashAnimator) {
-    this.splashAnimator = splashAnimator;
-    return this;
+  public void reveal(@NonNull final Animator revealAnimation) {
+    if (revealed) {
+      return;
+    }
+    revealed = true;
+
+    revealAnimation.addListener(new RemoveViewListener(view));
+    revealAnimation.start();
   }
 
   @NonNull
@@ -77,7 +59,12 @@ public final class RevealCallback {
     return resources.getInteger(android.R.integer.config_mediumAnimTime);
   }
 
-  private Animator createRevealAnimator() {
+  /**
+   * Create the default reveal animation to use with {@link #reveal(Animator)}. This is a helper
+   * method in case you want to chain multiple animations, for the default animation you can use
+   * {@link #reveal()}.
+   */
+  public Animator createRevealAnimator() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       final int width = view.getWidth();
       final int height = view.getHeight();
@@ -93,7 +80,22 @@ public final class RevealCallback {
     }
   }
 
-  private class RemoveViewListener implements Animator.AnimatorListener {
+  /** Removes the view from parent when the animation ends or gets cancelled. */
+  private static class RemoveViewListener implements Animator.AnimatorListener {
+
+    private final View view;
+
+    private RemoveViewListener(View view) {
+      this.view = view;
+    }
+
+    private void removeView() {
+      ViewGroup parent = (ViewGroup) view.getParent();
+      if (parent != null) {
+        parent.removeView(view);
+      }
+    }
+
     @Override
     public void onAnimationEnd(Animator animation) {
       removeView();

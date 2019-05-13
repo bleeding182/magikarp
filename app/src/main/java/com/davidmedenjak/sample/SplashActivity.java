@@ -1,5 +1,7 @@
 package com.davidmedenjak.sample;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
@@ -71,7 +73,6 @@ public class SplashActivity extends FragmentActivity {
     splash.run();
   }
 
-  // region << Demo helper methods >>
   /**
    * Return the splash screen or a dummy Runnable if we don't use one. This is just to make the demo
    * work.
@@ -79,44 +80,46 @@ public class SplashActivity extends FragmentActivity {
   private Runnable loadSplashScreen(boolean magikarp) {
     if (magikarp) {
       boolean animated = getIntent().getBooleanExtra(EXTRA_ANIMATED, false);
-      final RevealCallback callback = createSplashAnimation(animated);
-      return callback::reveal;
+
+      final RevealCallback callback = Magikarp.splash(this, R.drawable.splash_screen);
+
+      if (animated) {
+        return () -> callback.reveal(createSplashAnimation(callback));
+      } else {
+        return callback::reveal;
+      }
     } else {
       return () -> {};
     }
   }
 
-  private RevealCallback createSplashAnimation(boolean animate) {
-    final RevealCallback callback = Magikarp.splash(this, R.drawable.splash_screen);
-    if (animate) {
-      addAnimation(callback);
-    }
-    return callback;
-  }
-
-  private void addAnimation(RevealCallback callback) {
-    Drawable drawable = ((LayerDrawable) callback.getDrawable()).findDrawableByLayerId(R.id.icon);
-    float dp100 =
+  private Animator createSplashAnimation(RevealCallback callback) {
+    final Drawable drawable =
+        ((LayerDrawable) callback.getDrawable()).findDrawableByLayerId(R.id.icon);
+    final float dp100 =
         TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics());
 
-    ValueAnimator splashAnimator = ValueAnimator.ofInt(0, (int) dp100, 0);
+    final ValueAnimator splashAnimator = ValueAnimator.ofInt(0, (int) dp100, 0);
     splashAnimator.setDuration(450);
     splashAnimator.setInterpolator(new AnticipateOvershootInterpolator());
     splashAnimator.setRepeatMode(ValueAnimator.RESTART);
     splashAnimator.setStartDelay(100);
     splashAnimator.setRepeatCount(1);
 
-    int top = drawable.copyBounds().top;
-    int left = drawable.copyBounds().left;
+    final Rect drawableBounds = drawable.copyBounds();
+    final int top = drawableBounds.top;
+    final int left = drawableBounds.left;
     splashAnimator.addUpdateListener(
         animation -> {
-          Rect bounds = drawable.copyBounds();
+          drawable.copyBounds(drawableBounds);
           int value = (int) animation.getAnimatedValue();
-          bounds.offsetTo(left, top - value);
-          drawable.setBounds(bounds);
+          drawableBounds.offsetTo(left, top - value);
+          drawable.setBounds(drawableBounds);
         });
-    callback.withAnimator(splashAnimator);
+
+    final AnimatorSet animatorSet = new AnimatorSet();
+    animatorSet.playSequentially(splashAnimator, callback.createRevealAnimator());
+    return animatorSet;
   }
-  // endregion
 }
