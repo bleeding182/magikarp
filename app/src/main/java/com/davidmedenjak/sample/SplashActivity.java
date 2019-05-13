@@ -15,6 +15,8 @@ import android.view.animation.AnticipateOvershootInterpolator;
 import com.davidmedenjak.magikarp.Magikarp;
 import com.davidmedenjak.magikarp.RevealCallback;
 
+import java.util.concurrent.TimeUnit;
+
 import androidx.fragment.app.FragmentActivity;
 
 /** Demo Activity showcasing the different modes usable with Magikarp. */
@@ -22,6 +24,18 @@ public class SplashActivity extends FragmentActivity {
 
   public static final String EXTRA_MAGIKARP = "magikarp";
   public static final String EXTRA_ANIMATED = "animated";
+
+  /**
+   * Simulate the time it takes for the app to "load" until the first frame will be drawn. This is
+   * the time where we would usually see a plain {@code windowBackground} during app start.
+   */
+  private static final long APP_LOAD_TIME = TimeUnit.SECONDS.toMillis(1);
+
+  /**
+   * Simulate the time it takes to load content. This would usually be the time until we finished
+   * reading the cache or querying the API
+   */
+  private static final long CONTENT_LOAD_TIME = TimeUnit.MILLISECONDS.toMillis(500);
 
   public static Intent newIntent(Context context, boolean magikarp, boolean animated) {
     return new Intent(context, SplashActivity.class)
@@ -34,31 +48,42 @@ public class SplashActivity extends FragmentActivity {
     super.onCreate(savedInstanceState);
 
     try {
-      Thread.sleep(500);
+      // simulate slow app start
+      Thread.sleep(APP_LOAD_TIME);
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
 
-    boolean magikarp = getIntent().getBooleanExtra(EXTRA_MAGIKARP, false);
-
     setContentView(R.layout.activity_lorem_loading);
 
-    final Runnable splash;
+    // initialize demo stuff
+    final boolean magikarp = getIntent().getBooleanExtra(EXTRA_MAGIKARP, false);
+    final Runnable splash = loadSplashScreen(magikarp);
+
+    // simulate content loading
+    new Handler().postDelayed(() -> showContent(splash), CONTENT_LOAD_TIME);
+  }
+
+  /** We finished "loading", now display the "content" ;) */
+  private void showContent(Runnable splash) {
+    findViewById(android.R.id.progress).setVisibility(View.GONE);
+    findViewById(R.id.content).setVisibility(View.VISIBLE);
+    splash.run();
+  }
+
+  // region << Demo helper methods >>
+  /**
+   * Return the splash screen or a dummy Runnable if we don't use one. This is just to make the demo
+   * work.
+   */
+  private Runnable loadSplashScreen(boolean magikarp) {
     if (magikarp) {
       boolean animated = getIntent().getBooleanExtra(EXTRA_ANIMATED, false);
       final RevealCallback callback = createSplashAnimation(animated);
-      splash = callback::reveal;
+      return callback::reveal;
     } else {
-      splash = () -> {};
+      return () -> {};
     }
-    new Handler()
-        .postDelayed(
-            () -> {
-              findViewById(android.R.id.progress).setVisibility(View.GONE);
-              findViewById(R.id.content).setVisibility(View.VISIBLE);
-              splash.run();
-            },
-            1000);
   }
 
   private RevealCallback createSplashAnimation(boolean animate) {
@@ -93,4 +118,5 @@ public class SplashActivity extends FragmentActivity {
         });
     callback.withAnimator(splashAnimator);
   }
+  // endregion
 }

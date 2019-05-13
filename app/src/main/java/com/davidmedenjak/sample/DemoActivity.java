@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
+/** Activity to launch and showcase the different modes of splash screens available. */
 public class DemoActivity extends Activity {
 
   @Override
