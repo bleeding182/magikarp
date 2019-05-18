@@ -1,0 +1,39 @@
+language: android
+jdk: oraclejdk8
+android:
+  components:
+    - tools
+    - build-tools-28.0.3
+    - android-28
+    - extra-google-google_play_services
+    - extra-google-m2repository
+    - extra-android-m2repository
+install: true
+before_script:
+  - touch local.properties
+script: "./gradlew build test"
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - "$HOME/.gradle/caches/"
+    - "$HOME/.gradle/wrapper/"
+    - "$HOME/.android/build-cache"
+deploy:
+  - provider: releases
+    api_key:
+      secure: nYZAnnuzxoR7n9MgJuql8fnxfm3MmjlBWxeQtNWtWkJeZNBFoKmvsDb1con083AMG5nD7gN8+0f9ouobgI8HzfbyuzdMsLSLsY1C+Z8hyDLNcnuhzf/SE9KtF5CqBGLl5Exebb/7gECqLNtwd2f7+VrS2O3ly8oemO0SD4FOobbYq04wVXTPuzbIrWuPFHAPkQzmzj+y0Jxl/YrMujU94OmXWZbTo7alnqN6RNzRBCm04do+70muWMQwJCTTvDTVWqYbHwyiZZbTt/rkAjRGlyqVoFUITkXLJ6iJNMRv9T4rCDgBXTxfLXVgsquro9GGobDDEf4lTmCTJAoNba8aKif4wsQn8UL24Ppd67uuCz/1UMC9KfOJFf911M7zeLBpLxUn159xPkMDAIjUq5IzdXTvZvgeUP+Vy7A1tKjxyHhx9Iz0AJcUFaHMdQblSMzfIOFibaNu5wuSGVV0yJyFu66a3c16qrt8IPlWYd27JPMOIPFaGEEWr5ndMXQghCa92Gj7EJndU8SGaZl0yGxTu2JmI9qhhcQtYEi+epGTE249AtmKqyV8j+6K7iko0Fm/U8DdePBPntXaqxPx7K8xWGhxHf5fwroYIHTAskavFpmPJeohkCYiUHXaOCrkxiKJsiVTmRy7PiZeT3wrt5fx6sJq6FBTPcacQO9rjHi6Mac=
+    file: apk
+    skip_cleanup: true
+    on:
+      repo: bleeding182/magikarp
+      tags: true
+  - provider: script
+    script: "./gradlew bintrayUpload"
+    skip_cleanup: true
+    on:
+      tags: true
+env:
+  global:
+    secure: OQ7ik210d5Wq8fPxsR+svLl3bFvpgT1dORws98TIgqLQO2Ppzh7tPL7rSsxItgH8GX655zxBjSSfaQbZNtjV2a8zjRY6y+K9I0F0ZxlVgVhEsSA4GiGKZO7+FuSKhlwTVZ6Wa7KTSW9jObv2wfugnwFMW/xDN7kBYh05i0pvsrKYH55PYMZcUmby0I97mJ9Ktq7zTJpNTXh+AKmCpvdk4MEB5kcfDUJharCw/+MORlG21ss1VYyFVFx0weBtO3LigGRFB+oqUN7x/fwYa0egqqiUzNv7E2krQ9WsvHD6yeGt8QRYfTMTELhpMwG/jjIaaq/IHIO+xfKbPzIeG2gbF5oOl+j5Jrvohj6U2YvTV59I9Y4GKdVdQ+/QEK0LricuuwmppmYt749FqBeTWMK3FnWHBeds8R98bBlFz2KnCV0Mvb/J58Xm0vMYmtyqM+16PAtzXl+HUYBcNoir0LpdyC+Y4B4q2baUj87S0QFIuR9s4YI8I754xxRsZcU6Oay3O0zEL6zbhmOZQsS3FLERM/ElXJlAY1WbQkp6w67qYoeqjL9eZWDpVP/mSh45vokcW496Ow15givuBikl+OBqP2j7APGeM+eE06u3oCQ65Dkb7O1WYyLJKeDD17YG2jyt0qJwmptygVfcKATgalkma3/5mcuUMHERNR9HmsZID5Y=
