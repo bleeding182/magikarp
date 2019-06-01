@@ -161,6 +161,19 @@ private Animator createSplashAnimation(RevealCallback callback) {
 Then use `callback.reveal(animator)` to play your custom animation
 instead!
 
+## Usage
+
+You can try it out using JitPack by adding the following to your `build.gradle` file:
+
+```gradle
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+dependencies {
+    implementation 'com.github.bleeding182:magikarp:-SNAPSHOT'
+}
+```
+
 ## Feature Backlog
 
 This library should remain simple, as such the library should handle the
