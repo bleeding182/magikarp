@@ -7,6 +7,10 @@ demo app which showcases the the available options! You can also read an
 [introductory article](https://blog.davidmedenjak.com/android/2019/05/17/animated-splash-screens.html)
 on my blog.
 
+<p align="center">
+<img src="/readme/splash.gif"/>
+</p>
+
 ## Why?
 
 As the name might suggest this library is intended to help you with your
